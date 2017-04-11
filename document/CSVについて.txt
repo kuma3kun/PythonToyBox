@@ -1,0 +1,4 @@
+CSVについて
+
+・Anaconda環境にしたら上手くいかないのでpandasで代用
+・pandasはデータ分析ライブラリ
