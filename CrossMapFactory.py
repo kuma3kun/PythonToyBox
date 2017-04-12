@@ -10,7 +10,20 @@ class CrossMapFactory:
 	filePath = ""
 	fileName = ""
 	fileExtention = ""
-	crossMap = []
+	crossMap = ""
+	headFlag = ""
+
+	"""ファイルパスの指定"""
+	def __init__(self,path,headFlag = None):
+		if headFlag == "0" or headFlag is None :
+			print("フラグoff")
+			self.headFlag = None
+		else :
+			self.headFlag = 0
+
+		self.fullPath = path
+		self.pathClassify(path)
+		self.crossMapping(path)
 
 	"""パスの分類"""
 	def pathClassify(self,path):
@@ -28,25 +41,13 @@ class CrossMapFactory:
 			self.fileName = pathSplit.group("name")
 			self.fileExtention = pathSplit.group("extention")
 
-	"""ファイルパスの指定"""
-	def __init__(self,path):
-		self.fullPath = path
-		self.pathClassify(path)
-		self.crossMapping(path)
-
 	"""ファイル開いて二次配列にマッピング"""
 	def crossMapping(self,path):
 		with open(path , mode = "rt" , encoding = "utf-8" ) as file:
-			print(file)
 			if self.fileExtention == "csv" :
-				readFile = pandas.read_csv(file)
-				print(type(readFile))
-				print(readFile)
+				readFile = pandas.read_csv(file,header = self.headFlag)
 
-			rowCount = 0
-			for row in readFile:
-				self.crossMap[rowCount].append(row)
-			print(self.crossMap)
+			self.crossMap = readFile
 				
 
 	def start(self):
@@ -59,14 +60,18 @@ class CrossMapFactory:
 				print(self.crossMap)
 			elif command == "end":
 				endFlag = 1
+			else :
+				print(command)
 
 
 
 if __name__ == "__main__":
 	print("ファイルパスを入力してください")
 	inputPath = input()
+	print("列名付き？ Yes=1 No=0")
+	inputHeadFlag = input()
 
-	obj = CrossMapFactory(inputPath)
+	obj = CrossMapFactory(inputPath,inputHeadFlag)
 	obj.start()
 
 
